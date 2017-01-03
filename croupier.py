@@ -12,24 +12,26 @@ import argparse
 
 def transfer_and_print(fd1, fd2, name='', fobj=None):
     'Transfer data from fd1 to fd2 and print to fobj'
-    output_buffer = bytearray()
+    print_buffer = bytearray()
     while(True):
         ch = os.read(fd1, 1000)
         if ch == b'':
             break
+        if fobj is not None:
+            print_buffer += ch
+            parts = print_buffer.rsplit(b'\n', 1)
+            print_buffer = parts[1]
+            if len(parts) > 1:
+                to_print = parts[0]
+                try:
+                    s = to_print.decode()
+                except UnicodeDecodeError:
+                    s = str(bytes(to_print))
+                if name:
+                    print("{}: {}".format(name, s), file=fobj)
+                else:
+                    print(s, file=fobj)
         os.write(fd2, ch)
-        output_buffer += ch
-        if fobj is not None and ch[-1:] == b'\n':
-            try:
-                s = output_buffer.decode()
-            except UnicodeDecodeError:
-                s = str(bytes(output_buffer))
-            s = s[:-1]
-            if name:
-                print("{}: {}".format(name, s), file=fobj)
-            else:
-                print(s, file=fobj)
-            output_buffer = bytearray()
 
 def logged_pipe(name='', fobj=None):
     if fobj is None:
