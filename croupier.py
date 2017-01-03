@@ -18,19 +18,18 @@ def transfer_and_print(fd1, fd2, name='', fobj=None):
         if ch == b'':
             break
         if fobj is not None:
-            print_buffer += ch
-            parts = print_buffer.rsplit(b'\n', 1)
-            print_buffer = parts[1]
+            parts = ch.rsplit(b'\n', 1)
+            print_buffer += parts[0]
             if len(parts) > 1:
-                to_print = parts[0]
                 try:
-                    s = to_print.decode()
+                    s = print_buffer.decode()
                 except UnicodeDecodeError:
-                    s = str(bytes(to_print))
+                    s = str(bytes(print_buffer))
                 if name:
                     print("{}: {}".format(name, s), file=fobj)
                 else:
                     print(s, file=fobj)
+                print_buffer = bytearray(parts[1])
         os.write(fd2, ch)
 
 def logged_pipe(name='', fobj=None):
