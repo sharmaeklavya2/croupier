@@ -62,7 +62,7 @@ def main():
     parser.add_argument('--name2', default='B', help='Name of 2nd process')
     args = parser.parse_args()
     fobj = None if args.quiet else sys.stdout
-        
+
     interact(args.proc1, args.proc2, args.name1, args.name2, fobj)
 
 if __name__ == '__main__':
