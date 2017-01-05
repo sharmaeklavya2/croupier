@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 'Cross-connect stdin and stdout of 2 processes and show outputs from each.'
 
 from __future__ import print_function
@@ -10,13 +11,16 @@ import subprocess
 import threading
 import argparse
 
+
 def parts_to_print_gen(print_buffer, parts):
     yield print_buffer
     for part in parts[1: -1]:
         yield part
 
+
 def transfer_and_print(fd1, fd2, name='', fobj=None):
     'Transfer data from fd1 to fd2 and print to fobj'
+
     print_buffer = bytearray()
     while(True):
         ch = os.read(fd1, 1000)
@@ -38,16 +42,19 @@ def transfer_and_print(fd1, fd2, name='', fobj=None):
                 print_buffer = bytearray(parts[-1])
         os.write(fd2, ch)
 
+
 def logged_pipe(name='', fobj=None):
     if fobj is None:
         return os.pipe()
     else:
         fd1, write_end = os.pipe()
         read_end, fd2 = os.pipe()
-        thread = threading.Thread(target=(lambda: transfer_and_print(fd1, fd2, name, fobj)))
+        args = (fd1, fd2, name, fobj)
+        thread = threading.Thread(target=transfer_and_print, args=args)
         thread.daemon = True
         thread.start()
         return (read_end, write_end)
+
 
 def interact(pstr1, pstr2, name1='A', name2='B', fobj=None):
     pargs1 = shlex.split(pstr1)
@@ -59,18 +66,20 @@ def interact(pstr1, pstr2, name1='A', name2='B', fobj=None):
     pa.wait()
     pb.wait()
 
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('proc1', help='Command line of 1st process')
     parser.add_argument('proc2', help='Command line of 2nd process')
     parser.add_argument('-q', '--quiet', action='store_true', default=False,
-        help="Don't print output from processes")
+                        help="Don't print output from processes")
     parser.add_argument('--name1', default='A', help='Name of 1st process')
     parser.add_argument('--name2', default='B', help='Name of 2nd process')
     args = parser.parse_args()
     fobj = None if args.quiet else sys.stdout
 
     interact(args.proc1, args.proc2, args.name1, args.name2, fobj)
+
 
 if __name__ == '__main__':
     main()

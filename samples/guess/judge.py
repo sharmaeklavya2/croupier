@@ -6,18 +6,23 @@ import math
 import random
 import argparse
 
+
 def exit_with_error(errmsg):
     print("Verdict: Wrong Answer ({})".format(errmsg), file=sys.stderr)
     sys.stderr.flush()
     sys.exit(1)
 
+
 def exit_with_success(n, moves):
     score = (math.log(n, 2) + 1) / (moves + 1)
-    print("Verdict: Correct Answer (moves={}, score={})".format(moves, score), file=sys.stderr)
+    fmtstr = "Verdict: Correct Answer (moves={}, score={})"
+    print(fmtstr.format(moves, score), file=sys.stderr)
     sys.stderr.flush()
     sys.exit(0)
 
+
 NMAX = 10**9
+
 
 def play(n=NMAX, k=None, seed=None):
     moves = 0
@@ -55,14 +60,17 @@ def play(n=NMAX, k=None, seed=None):
         else:
             exit_with_error("Invalid command or number of arguments")
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', type=int, default=NMAX, help='maximum number that can be chosen')
+    parser.add_argument('-n', type=int, default=NMAX,
+                        help='maximum number that can be chosen')
     parser.add_argument('-k', type=int, help='number chosen by computer')
     parser.add_argument('--seed', help='seed for the random number generator')
     args = parser.parse_args()
 
     play(args.n, args.k, args.seed)
+
 
 if __name__ == '__main__':
     main()
