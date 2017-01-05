@@ -2,6 +2,7 @@
 *.pyc
 __pycache__/
 /readme.html
+tests/outputs2/
 
 # Trash
 *~

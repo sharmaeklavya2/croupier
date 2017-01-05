@@ -1,0 +1,14 @@
+computer: 100
+player: ? 1 50
+computer: in
+player: ? 1 25
+computer: in
+player: ? 1 13
+computer: out
+player: ? 14 19
+computer: out
+player: ? 20 22
+computer: out
+player: ? 23 24
+computer: out
+player: ! 25
