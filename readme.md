@@ -33,6 +33,14 @@ python: Nice to meet you, bash.
 bash: Nice to meet you, python.
 ```
 
+## Tests
+
+Run `tests/test_guess.sh` for automated testing.
+
+`flake8` is used for linting python code.
+
+Travis CI has been set up to run `tests/test_guess.sh` and `flake8`.
+
 ## License
 
 This program is licensed under the [MIT License](http://www.opensource.org/licenses/MIT).
