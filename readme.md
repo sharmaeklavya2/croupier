@@ -12,7 +12,6 @@ Run `python croupier.py --help` for information on how to use this program.
 Run `python croupier.py "bash sample.sh" "python sample.py"` to see a demo.
 
 This program is compatible with both python 2 and python 3.
-This program is targeted for Unix-like operating systems (but it might work on windows).
 
 ## License
 
