@@ -10,6 +10,11 @@ import subprocess
 import threading
 import argparse
 
+def parts_to_print_gen(print_buffer, parts):
+    yield print_buffer
+    for part in parts[1: -1]:
+        yield part
+
 def transfer_and_print(fd1, fd2, name='', fobj=None):
     'Transfer data from fd1 to fd2 and print to fobj'
     print_buffer = bytearray()
@@ -18,18 +23,19 @@ def transfer_and_print(fd1, fd2, name='', fobj=None):
         if ch == b'':
             break
         if fobj is not None:
-            parts = ch.rsplit(b'\n', 1)
+            parts = ch.split(b'\n')
             print_buffer += parts[0]
             if len(parts) > 1:
-                try:
-                    s = print_buffer.decode()
-                except UnicodeDecodeError:
-                    s = str(bytes(print_buffer))
-                if name:
-                    print("{}: {}".format(name, s), file=fobj)
-                else:
-                    print(s, file=fobj)
-                print_buffer = bytearray(parts[1])
+                for part in parts_to_print_gen(print_buffer, parts):
+                    try:
+                        s = part.decode()
+                    except UnicodeDecodeError:
+                        s = str(bytes(part))
+                    if name:
+                        print("{}: {}".format(name, s), file=fobj)
+                    else:
+                        print(s, file=fobj)
+                print_buffer = bytearray(parts[-1])
         os.write(fd2, ch)
 
 def logged_pipe(name='', fobj=None):
