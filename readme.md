@@ -9,7 +9,7 @@ This program was originally made for testing solutions to
 
 Run `python croupier.py --help` for information on how to use this program.
 
-Run `python croupier.py "bash sample.sh" "python sample.py"` to see a demo.
+Run `python croupier.py "bash samples/hello/hello.sh" "python samples/hello/hello.py"` to see a demo.
 
 This program is compatible with both python 2 and python 3.
 
