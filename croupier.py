@@ -12,6 +12,10 @@ import threading
 import argparse
 
 
+def prRed(skk): print("\033[91m {}\033[00m" .format(skk), end = '')
+def prGreen(skk): print("\033[92m {}\033[00m" .format(skk), end = '')
+
+
 def parts_to_print_gen(print_buffer, parts):
     yield print_buffer
     for part in parts[1: -1]:
@@ -36,7 +40,13 @@ def transfer_and_print(fd1, fd2, name='', fobj=None):
                     except UnicodeDecodeError:
                         s = str(bytes(part))
                     if name:
-                        print("{}: {}".format(name, s), file=fobj)
+                        if (name == Args.name1):
+                            prRed(name)
+                            print(": {}".format(s), file=fobj)
+                        else:
+                            prGreen(name)
+                            print(": {}".format(s), file=fobj)
+                            print()
                     else:
                         print(s, file=fobj)
                 print_buffer = bytearray(parts[-1])
@@ -77,9 +87,11 @@ def main():
     parser.add_argument('--name2', default='B', help='Name of 2nd process')
     args = parser.parse_args()
     fobj = None if args.quiet else sys.stdout
-
+    global Args
+    Args = args
     interact(args.proc1, args.proc2, args.name1, args.name2, fobj)
 
 
 if __name__ == '__main__':
     main()
+
