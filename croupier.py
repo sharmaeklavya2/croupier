@@ -10,10 +10,20 @@ import shlex
 import subprocess
 import threading
 import argparse
+import time
 
 
-def prRed(skk): print("\033[91m {}\033[00m" .format(skk), end = '')
-def prGreen(skk): print("\033[92m {}\033[00m" .format(skk), end = '')
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
 
 
 def parts_to_print_gen(print_buffer, parts):
@@ -41,11 +51,9 @@ def transfer_and_print(fd1, fd2, name='', fobj=None):
                         s = str(bytes(part))
                     if name:
                         if (name == Args.name1):
-                            prRed(name)
-                            print(": {}".format(s), file=fobj)
+                            print("{}{}{}: {}".format(color.RED,name,color.END,s), file=fobj)
                         else:
-                            prGreen(name)
-                            print(": {}".format(s), file=fobj)
+                            print("{}{}{}: {}".format(color.GREEN,name,color.END,s), file=fobj)
                             print()
                     else:
                         print(s, file=fobj)
@@ -92,9 +100,13 @@ def main():
     if (args.name2 == 'B'):
         args.name2 = args.proc2[2:]
     global Args
+    global start_time
+    global end_time
     Args = args
+    start_time = time.time()
     interact(args.proc1, args.proc2, args.name1, args.name2, fobj)
-
+    end_time = time.time()
+    print(f"\n\033[41m{color.BOLD}Finished in : {color.UNDERLINE}{end_time-start_time}{color.END}\033[41m {color.BOLD}seconds{color.END}")
 
 if __name__ == '__main__':
     main()
